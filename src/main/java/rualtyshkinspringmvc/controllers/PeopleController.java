@@ -12,6 +12,7 @@ import rualtyshkinspringmvc.models.Person;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDao personDao;
+
     @Autowired
     public PeopleController(PersonDao personDao) {
         this.personDao = personDao;
@@ -30,4 +31,17 @@ public class PeopleController {
         return "people/show";
     }
 
+    @GetMapping("/new")
+    public String newPerson(Model model) {
+        model.addAttribute("person", new Person());
+
+        return "people/new";
+    }
+
+    @PostMapping
+    public String create(@ModelAttribute("person") Person person) {
+        personDao.save(person);
+        return "redirect:/people"; // совершается переход на другую страницу после добавки человека в базу данных
+
+    }
 }

@@ -12,7 +12,6 @@ import rualtyshkinspringmvc.models.Person;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDao personDao;
-
     @Autowired
     public PeopleController(PersonDao personDao) {
         this.personDao = personDao;
@@ -30,18 +29,33 @@ public class PeopleController {
         model.addAttribute("person", personDao.show(id));
         return "people/show";
     }
-
     @GetMapping("/new")
-    public String newPerson(Model model) {
-        model.addAttribute("person", new Person());
+    public String newPerson(Model model){
+model.addAttribute("person",new Person());
 
         return "people/new";
     }
-
     @PostMapping
-    public String create(@ModelAttribute("person") Person person) {
+    public String create(@ModelAttribute ("person") Person person){
         personDao.save(person);
         return "redirect:/people"; // совершается переход на другую страницу после добавки человека в базу данных
 
     }
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable ("id") int id){
+model.addAttribute("person",personDao.show(id));
+        return"people/edit";
+    }
+    @PatchMapping("/{id}")
+        public String update(@ModelAttribute("person") Person person , @PathVariable("id") int id){
+        personDao.update(id,person);
+        return "redirect:/people";
+    }
+@DeleteMapping("/{id}")
+    public String Delete(@PathVariable("id") int id){
+        personDao.delete(id);
+        return "redirect:/people";
+
+}
+
 }
